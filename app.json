@@ -37,6 +37,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ea322abc-ef03-4aca-adf7-a8d223c159a4"
+      }
+    },
+    "owner": "melodycodes-team"
   }
 }
