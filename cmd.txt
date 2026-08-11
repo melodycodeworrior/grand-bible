@@ -1,0 +1,2 @@
+npx eas-cli@20.5.1 login
+npx eas-cli@20.5.1 build --platform android --profile previews
