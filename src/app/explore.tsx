@@ -1,180 +1,21 @@
-import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useReadingProgress } from '@/context/reading-progress';
 
-import { ExternalLink } from '@/components/external-link';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
-
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
-  };
-  const theme = useTheme();
-
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
-
-  return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
-
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
-            </Pressable>
-          </ExternalLink>
-        </ThemedView>
-
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('@/assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
-              />
-            </ThemedView>
-          </Collapsible>
-
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('@/assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
-  );
+const green = '#62D26F';
+export default function ProgressScreen() {
+  const { totals } = useReadingProgress();
+  const percentage = totals.chapters ? Math.round(totals.completed * 100 / totals.chapters) : 0;
+  return <View style={s.screen}><StatusBar style="light" /><SafeAreaView style={s.safe}><ScrollView contentContainerStyle={s.content}>
+    <Text style={s.kicker}>GRANDBOOK</Text><Text style={s.title}>Overview</Text><Text style={s.subtitle}>Your reading progress, live from the library.</Text>
+    <Card title="Chapters completed"><Text style={s.metric}>{totals.completed}<Text style={s.dim}> / {totals.chapters}</Text></Text><Text style={s.green}>+{totals.chapters ? (100 / totals.chapters).toFixed(2) : 0}% per chapter</Text><Bars value={percentage} /></Card>
+    <Card title="Reading progress"><Text style={s.metric}>{percentage}%</Text><Text style={s.dim}>of your complete library</Text><View style={s.track}><View style={[s.fill,{width:`${percentage}%`}]} /></View></Card>
+    <Card title="Total sentences"><Text style={s.metric}>{totals.sentences}</Text><Text style={s.dim}>verses ready to read</Text><Bars value={54} /></Card>
+    <Card title="Marked sentences"><Text style={s.metric}>{totals.highlighted}</Text><Text style={s.dim}>your saved colour highlights</Text><View style={s.pink} /></Card>
+    <View style={s.insight}><Text style={s.insightKicker}>INSIGHT</Text><Text style={s.insightMetric}>{percentage}%</Text><Text style={s.insightCopy}>Every chapter you mark as read updates this overview immediately.</Text></View>
+  </ScrollView></SafeAreaView></View>;
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
-  },
-  titleContainer: {
-    gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
-  },
-  centerText: {
-    textAlign: 'center',
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
-  },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
-  },
-  imageTutorial: {
-    width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
-  },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
-  },
-});
+function Card({title,children}:{title:string;children:React.ReactNode}) { return <View style={s.card}><Text style={s.cardTitle}>{title}</Text>{children}</View>; }
+function Bars({value}:{value:number}) { return <View style={s.bars}>{[30,56,43,77,62,91,65,50,79,38,60,45].map((height,index)=><View key={index} style={[s.bar,{height:`${height}%`,backgroundColor:index*9<value?green:'#303840'}]} />)}</View>; }
+const s=StyleSheet.create({screen:{flex:1,backgroundColor:'#0E1114'},safe:{flex:1},content:{padding:20,paddingBottom:42,gap:12},kicker:{color:green,fontSize:10,fontWeight:'800',letterSpacing:2},title:{color:'#F1F5EF',fontSize:39,fontFamily:'monospace',marginTop:-5},subtitle:{color:'#9AA4A7',fontSize:14,marginBottom:10},card:{minHeight:158,borderColor:'#536069',borderWidth:1,borderRadius:18,padding:17,backgroundColor:'#181E24',overflow:'hidden'},cardTitle:{color:'#E7ECE9',fontSize:15,fontWeight:'700'},metric:{color:'#F2F6F2',fontFamily:'monospace',fontSize:36,fontWeight:'700',marginTop:20},dim:{color:'#94A0A5',fontSize:12},green:{color:green,fontSize:12,fontWeight:'700',marginTop:5},track:{height:9,marginTop:18,borderRadius:8,backgroundColor:'#303840',overflow:'hidden'},fill:{height:'100%',borderRadius:8,backgroundColor:green},bars:{height:43,marginTop:15,flexDirection:'row',gap:4,alignItems:'flex-end'},bar:{flex:1,borderRadius:3},pink:{width:58,height:9,borderRadius:7,backgroundColor:'#E87EAE',marginTop:21},insight:{borderRadius:18,padding:22,minHeight:185,backgroundColor:'#CFEACF'},insightKicker:{fontWeight:'800',fontSize:10,letterSpacing:1.5,color:'#245134'},insightMetric:{fontFamily:'monospace',fontSize:55,fontWeight:'800',color:'#102618',marginTop:15},insightCopy:{color:'#23432C',fontSize:14,lineHeight:20,maxWidth:'80%'}});

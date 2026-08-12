@@ -1,0 +1,457 @@
+{
+  "metadata": {
+    "title": "Spiritual Entities of The Grand Bible",
+    "compiler_reference": "Lord Henfield Compilation",
+    "description": "Categorized spiritual entities, divine beings, angelic hierarchies, fallen spirits, realms, and primordial creatures explicitly present across the primary texts, apocrypha, gnostic gospels, and interfaith scriptures included in The Grand Bible."
+  },
+  "categories": [
+    {
+      "category": "Deities, Goddesses & Ultimate Realities",
+      "description": "Supreme ultimate realities, monotheistic titles, divine emanations, and major deities from biblical, ancient near eastern, and eastern traditions.",
+      "entities": [
+        {
+          "name": "Yahweh / YHWH",
+          "type": "Supreme Deity",
+          "tradition": "Hebrew Scripture / Old Testament",
+          "description": "The covenantal name of God in the Hebrew Bible."
+        },
+        {
+          "name": "Elohim",
+          "type": "Divine Title / God",
+          "tradition": "Hebrew Scripture",
+          "description": "Plural title for the Divine/God in Genesis and Hebrew texts."
+        },
+        {
+          "name": "Allah",
+          "type": "Supreme Deity",
+          "tradition": "Islamic Scripture / Quranic Texts",
+          "description": "The One God in Islamic scriptures."
+        },
+        {
+          "name": "Brahman",
+          "type": "Ultimate Reality",
+          "tradition": "Vedic / Hindu Scriptures",
+          "description": "The unmanifest, ultimate, unchanging reality in Upanishadic and Vedic texts."
+        },
+        {
+          "name": "Brahma",
+          "type": "Deity (Creator)",
+          "tradition": "Vedic / Hindu Scriptures",
+          "description": "The creator god in Hindu cosmology."
+        },
+        {
+          "name": "Vishnu",
+          "type": "Deity (Preserver)",
+          "tradition": "Vedic / Hindu Scriptures",
+          "description": "The preserver deity who incarnates as avatars (Krishna, Rama)."
+        },
+        {
+          "name": "Shiva",
+          "type": "Deity (Transformer/Destroyer)",
+          "tradition": "Vedic / Hindu Scriptures",
+          "description": "The deity of cosmic destruction, transformation, and asceticism."
+        },
+        {
+          "name": "Krishna",
+          "type": "Avatar / Divine Entity",
+          "tradition": "Hindu Scriptures (Bhagavad Gita)",
+          "description": "Eighth avatar of Vishnu, central speaker of the Bhagavad Gita."
+        },
+        {
+          "name": "Rama",
+          "type": "Avatar / Divine Entity",
+          "tradition": "Hindu Scriptures (Ramayana)",
+          "description": "Seventh avatar of Vishnu and central hero of the Ramayana."
+        },
+        {
+          "name": "Ahura Mazda",
+          "type": "Supreme Deity",
+          "tradition": "Zoroastrian Texts",
+          "description": "The supreme wise lord of Zoroastrian scriptures included in comparative sections."
+        },
+        {
+          "name": "Sophia",
+          "type": "Divine Feminine / Wisdom",
+          "tradition": "Apocrypha / Wisdom Literature / Gnosticism",
+          "description": "Personified Divine Wisdom in the Old Testament Apocrypha and Gnostic texts."
+        },
+        {
+          "name": "Barbelo",
+          "type": "Divine Feminine / Emanation",
+          "tradition": "Gnostic Scriptures (Sethian Texts)",
+          "description": "The first divine forethought/emanation of the Supreme Invisible Spirit in Gnostic texts."
+        },
+        {
+          "name": "Saraswati",
+          "type": "Goddess",
+          "tradition": "Vedic / Hindu Scriptures",
+          "description": "Goddess of knowledge, wisdom, speech, and learning."
+        },
+        {
+          "name": "Lakshmi",
+          "type": "Goddess",
+          "tradition": "Vedic / Hindu Scriptures",
+          "description": "Goddess of wealth, prosperity, and spiritual abundance."
+        },
+        {
+          "name": "Ashtoreth / Astarte",
+          "type": "Deity / Goddess",
+          "tradition": "Canaanite / Ancient Near Eastern Texts",
+          "description": "Ancient Near Eastern goddess of fertility, war, and love referenced in biblical texts."
+        },
+        {
+          "name": "Baal",
+          "type": "Deity",
+          "tradition": "Canaanite / Ancient Near Eastern Texts",
+          "description": "Canaanite storm and fertility deity frequently referenced in the Hebrew Bible."
+        },
+        {
+          "name": "Molech",
+          "type": "Deity",
+          "tradition": "Canaanite / Ancient Near Eastern Texts",
+          "description": "Canaanite deity associated with child sacrifice in biblical historical books."
+        },
+        {
+          "name": "Dagon",
+          "type": "Deity",
+          "tradition": "Philistine / Ancient Near Eastern Texts",
+          "description": "Philistine agricultural and fertility deity mentioned in 1 Samuel."
+        },
+        {
+          "name": "Tiamat",
+          "type": "Primordial Goddess",
+          "tradition": "Babylonian Creation Texts (Enuma Elish)",
+          "description": "Primordial ocean goddess of chaos in Mesopotamian mythology."
+        }
+      ]
+    },
+    {
+      "category": "Celestial Orders & Heavenly Angelic Hierarchies",
+      "description": "Celestial angelic orders, choirs, archangels, and specific divine messengers.",
+      "entities": [
+        {
+          "name": "Seraphim",
+          "type": "Angelic Order",
+          "tradition": "Hebrew Bible (Isaiah 6) / Heavenly Hierarchy",
+          "description": "Six-winged burning ones that surround the throne of God."
+        },
+        {
+          "name": "Cherubim",
+          "type": "Angelic Order",
+          "tradition": "Hebrew Scripture / Christian Angelology",
+          "description": "Four-faced living beings guarding holy ground, Eden, and the Ark of the Covenant."
+        },
+        {
+          "name": "Thrones (Ophanim / Wheels)",
+          "type": "Angelic Order",
+          "tradition": "Ezekiel's Visions / Intertestamental Texts",
+          "description": "Many-eyed living wheels associated with God's throne chariot."
+        },
+        {
+          "name": "Dominions (Kyriotetes)",
+          "type": "Angelic Order",
+          "tradition": "New Testament / Christian Angelology",
+          "description": "Angelic rulers regulating the duties of lower angelic orders."
+        },
+        {
+          "name": "Virtues (Dynameis)",
+          "type": "Angelic Order",
+          "tradition": "New Testament / Christian Angelology",
+          "description": "Angelic spirits associated with divine miracles and cosmic order."
+        },
+        {
+          "name": "Powers (Exousiai)",
+          "type": "Angelic Order",
+          "tradition": "New Testament / Christian Angelology",
+          "description": "Warrior angels overseeing cosmic boundaries and combating demonic forces."
+        },
+        {
+          "name": "Principalities (Archai)",
+          "type": "Angelic Order",
+          "tradition": "New Testament / Christian Angelology",
+          "description": "Angelic guardians over nations, territories, and human institutions."
+        },
+        {
+          "name": "Archangels",
+          "type": "Angelic Order",
+          "tradition": "Abrahamic Traditions",
+          "description": "Chief angels carrying out crucial messages and cosmic tasks."
+        },
+        {
+          "name": "Michael",
+          "type": "Archangel",
+          "tradition": "Jewish, Christian, Islamic Texts",
+          "description": "Archangel of protection, heavenly general, defender of the righteous."
+        },
+        {
+          "name": "Gabriel (Jibril)",
+          "type": "Archangel",
+          "tradition": "Jewish, Christian, Islamic Texts",
+          "description": "Chief divine messenger delivering revelations to prophets."
+        },
+        {
+          "name": "Raphael",
+          "type": "Archangel",
+          "tradition": "Apocrypha (Tobit) / Jewish Mysticism",
+          "description": "Archangel of healing, binding of demon Asmodeus, and human guidance."
+        },
+        {
+          "name": "Uriel",
+          "type": "Archangel",
+          "tradition": "Enochic Texts / Apocrypha",
+          "description": "Archangel of wisdom, celestial light, and guardian of Tartarus."
+        },
+        {
+          "name": "Metatron",
+          "type": "Archangel / Heavenly Scribe",
+          "tradition": "Enochic Literature / Jewish Mysticism",
+          "description": "Transformed Enoch serving as supreme heavenly scribe and Chancellor of Heaven."
+        },
+        {
+          "name": "Sandalphon",
+          "type": "Archangel / Heavenly Mediator",
+          "tradition": "Jewish Mysticism / Intertestamental Texts",
+          "description": "Elijah's angelic counterpart who gathers human prayers into wreaths for God."
+        },
+        {
+          "name": "Israfil",
+          "type": "Archangel",
+          "tradition": "Islamic Eschatology",
+          "description": "The archangel who blows the trumpet signaling the Day of Resurrection."
+        },
+        {
+          "name": "Azrael",
+          "type": "Archangel",
+          "tradition": "Islamic and Abrahamic Lore",
+          "description": "The archangel of death responsible for taking human souls at appointed times."
+        },
+        {
+          "name": "Raziel",
+          "type": "Archangel",
+          "tradition": "Jewish Mystical Literature",
+          "description": "Angel of divine secrets and keeper of the Sefer Raziel."
+        },
+        {
+          "name": "Kiraman Katibin",
+          "type": "Recording Angels",
+          "tradition": "Islamic Scriptures",
+          "description": "Pair of angels recording good and bad deeds of every person."
+        },
+        {
+          "name": "Munkar and Nakir",
+          "type": "Angels of Judgment",
+          "tradition": "Islamic Texts",
+          "description": "Angels who question souls in the grave regarding faith and deeds."
+        }
+      ]
+    },
+    {
+      "category": "Fallen Angels, Demons & Adversarial Figures",
+      "description": "Fallen Watchers, demonic lords, and adversarial spiritual entities across canonical and apocryphal sources.",
+      "entities": [
+        {
+          "name": "Satan / Ha-Satan",
+          "type": "Adversary / Accuser",
+          "tradition": "Hebrew Scripture & New Testament",
+          "description": "The chief adversary, prosecutor, and opponent of God and mankind."
+        },
+        {
+          "name": "Lucifer",
+          "type": "Fallen Entity / Daystar",
+          "tradition": "Old Testament (Isaiah 14) / Christian Tradition",
+          "description": "The fallen morning star associated with pride and fall from heaven."
+        },
+        {
+          "name": "Iblis",
+          "type": "Fallen Jinn / Chief Adversary",
+          "tradition": "Islamic Scripture (Quran)",
+          "description": "The primary adversary in Islam who refused to bow to Adam due to pride."
+        },
+        {
+          "name": "Semyaza",
+          "type": "Leader of Fallen Watchers",
+          "tradition": "Book of Enoch",
+          "description": "Chief leader of the 200 Watchers who descended upon Mount Hermon."
+        },
+        {
+          "name": "Azazel",
+          "type": "Fallen Watcher / Scapegoat Entity",
+          "tradition": "Leviticus 16 & Book of Enoch",
+          "description": "Fallen angel who taught humans warfare and cosmetics, bound in the desert."
+        },
+        {
+          "name": "Beelzebub",
+          "type": "Prince of Demons",
+          "tradition": "New Testament & Intertestamental Lore",
+          "description": "High demonic authority known as the Lord of the Flies / Prince of Demons."
+        },
+        {
+          "name": "Belial",
+          "type": "Demon / Personification of Evil",
+          "tradition": "Dead Sea Scrolls & New Testament",
+          "description": "Leader of darkness and spirit of lawlessness in intertestamental writings."
+        },
+        {
+          "name": "Asmodeus",
+          "type": "Demonic Spirit",
+          "tradition": "Book of Tobit",
+          "description": "Demon of lust and destruction bound by Raphael in Tobit."
+        },
+        {
+          "name": "Lilith",
+          "type": "Night Entity / Demonic Figure",
+          "tradition": "Isaiah 34 & Rabbinic Folkloric Texts",
+          "description": "Night demon associated with screech owls, desert wastes, and newborn harm."
+        },
+        {
+          "name": "Abaddon / Apollyon",
+          "type": "Angel of the Abyss",
+          "tradition": "Book of Revelation",
+          "description": "King of the demonic locusts and ruler of the bottomless pit of destruction."
+        }
+      ]
+    },
+    {
+      "category": "Realms, Heavens, Underworlds & Abodes",
+      "description": "Cosmological realms, spiritual planes, heavens, and underworlds present in the compilation.",
+      "entities": [
+        {
+          "name": "The Seven Heavens",
+          "type": "Celestial Realm",
+          "tradition": "Jewish, Christian, Islamic Cosmology",
+          "description": "Ascending tiers of cosmic heavens (Vilon, Raki'a, Shehaqim, Zebul, Ma'on, Machon, Araboth)."
+        },
+        {
+          "name": "Pleroma",
+          "type": "Divine Realm of Light",
+          "tradition": "Gnostic Cosmology",
+          "description": "The totality of divine power, light, and spiritual emanations."
+        },
+        {
+          "name": "Garden of Eden / Jannah",
+          "type": "Primal Paradise",
+          "tradition": "Genesis & Quranic Scriptures",
+          "description": "The original paradise created for mankind and the eternal abode of the righteous."
+        },
+        {
+          "name": "Sheol",
+          "type": "Underworld / Abode of Dead",
+          "tradition": "Hebrew Scriptures",
+          "description": "The shadowy subterranean realm of departed human spirits."
+        },
+        {
+          "name": "Tartarus",
+          "type": "Abyss of Binding",
+          "tradition": "2 Peter & Book of Enoch",
+          "description": "The deepest subterranean prison where fallen Watchers are chained in darkness."
+        },
+        {
+          "name": "Gehenna / Jahannam",
+          "type": "Fiery Realm of Purification/Punishment",
+          "tradition": "New Testament & Islamic Texts",
+          "description": "The valley/place of fire for final judgment and purification of evil souls."
+        },
+        {
+          "name": "Svarga / Devaloka",
+          "type": "Heavenly Plane",
+          "tradition": "Vedic / Hindu Cosmology",
+          "description": "The celestial paradise of the gods (Devas) ruled by Indra."
+        },
+        {
+          "name": "Naraka",
+          "type": "Underworld Realm",
+          "tradition": "Hindu / Buddhist Cosmology",
+          "description": "The underworld realm of retribution overseen by Yama."
+        }
+      ]
+    },
+    {
+      "category": "Spirits, Elementals & Primordial Creatures",
+      "description": "Elemental spirits, jinn, demonic races, and primordial cosmic beasts.",
+      "entities": [
+        {
+          "name": "Jinn",
+          "type": "Elemental Spirits",
+          "tradition": "Islamic Scriptures",
+          "description": "Spiritual beings created from smokeless fire possessing free will."
+        },
+        {
+          "name": "Ifrit",
+          "type": "High-tier Jinn",
+          "tradition": "Islamic Texts",
+          "description": "A powerful class of Jinn known for strength, speed, and cunning."
+        },
+        {
+          "name": "Marid",
+          "type": "High-tier Jinn",
+          "tradition": "Islamic Texts",
+          "description": "Powerful aquatic Jinn associated with open waters and immense power."
+        },
+        {
+          "name": "Asuras",
+          "type": "Demigods / Power Entities",
+          "tradition": "Vedic / Hindu Scriptures",
+          "description": "Powerful entities in constant cosmic opposition to the heavenly Devas."
+        },
+        {
+          "name": "Yakshas",
+          "type": "Nature Spirits",
+          "tradition": "Hindu & Buddhist Scriptures",
+          "description": "Guardian spirits of forests, natural treasures, and wild earth."
+        },
+        {
+          "name": "Rakshasas",
+          "type": "Demonic Shape-shifters",
+          "tradition": "Hindu Epic Scriptures (Ramayana)",
+          "description": "Fierce, shape-shifting demonic beings of wild lands and nighttime."
+        },
+        {
+          "name": "Rephaim / Shades",
+          "type": "Ancestral Spirits / Giants",
+          "tradition": "Hebrew Scriptures",
+          "description": "Spirits of ancient giants and ancestral shades inhabiting Sheol."
+        },
+        {
+          "name": "Leviathan",
+          "type": "Primordial Sea Monster",
+          "tradition": "Job, Psalms, Isaiah",
+          "description": "The great multi-headed sea serpent of chaotic waters."
+        },
+        {
+          "name": "Behemoth",
+          "type": "Primordial Land Creature",
+          "tradition": "Book of Job",
+          "description": "The gigantic primordial land monster symbolizing unmatched physical strength."
+        },
+        {
+          "name": "Ziz",
+          "type": "Primordial Sky Bird",
+          "tradition": "Jewish Folklore / Apocryphal Commentary",
+          "description": "The colossal primordial bird whose wings block out the sun."
+        },
+        {
+          "name": "Nephilim",
+          "type": "Hybrid Giant Race",
+          "tradition": "Genesis 6 & Book of Enoch",
+          "description": "Offspring produced by the fallen Watchers and human daughters."
+        },
+        {
+          "name": "The Seven-Headed Dragon",
+          "type": "Apocalyptic Beast",
+          "tradition": "Book of Revelation",
+          "description": "The red dragon in the heavens representing cosmic Satanic power."
+        }
+      ]
+    },
+    {
+      "category": "Ggh",
+      "description": "Gh",
+      "entities": []
+    },
+    {
+      "category": "Ghuu",
+      "description": "",
+      "entities": []
+    }
+  ]
+}
