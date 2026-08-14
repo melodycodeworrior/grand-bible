@@ -3,8 +3,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import { ReadingProgressProvider } from '@/context/reading-progress';
-import { AuthProvider } from '@/context/auth';
+import { AuthProvider } from '@/features/auth/providers/auth-provider';
+import { ReadingProgressProvider } from '@/features/library/providers/reading-progress-provider';
 
 SplashScreen.preventAutoHideAsync();
 

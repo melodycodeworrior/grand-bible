@@ -21,6 +21,14 @@ export default function AppTabs() {
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="read">
+        <NativeTabs.Trigger.Label>Read</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'chart.bar', selected: 'chart.bar.fill' }}
+          md={{ default: 'bar_chart', selected: 'bar_chart' }}
+        />
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="explore">
         <NativeTabs.Trigger.Label>Progress</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'chart.bar', selected: 'chart.bar.fill' }}

@@ -1,5 +1,5 @@
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore/lite';
-import { auth, db } from '../../firebaseConfig';
+import { auth, db } from '@/config/firebase';
 
 function requireSignedInUser() {
   const user = auth.currentUser;
