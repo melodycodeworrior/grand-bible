@@ -4,6 +4,9 @@ import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'r
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GrandbookTheme } from '@/constants/grandbook-theme';
+import { useAuth } from '@/context/auth';
+import { saveSpiritualEntities } from '@/services/app-data';
+import { ensureGrandSearchSeeded, saveGrandSearchEntry } from '@/services/grand-search';
 
 type GradientColors = readonly [string, string, ...string[]];
 type Entity = { name: string; type: string; tradition: string; description: string };
@@ -23,9 +26,9 @@ type EditorState = { mode: 'edit' | 'add'; category: Category; entity?: Entity }
 type CategoryEditorState = { category?: Category };
 type SearchStore = { generated_from: string; generated_at?: string; results: Record<string, SearchResult[]> };
 
-const data = require('../../assets/json/spiritual_entities.json') as { metadata: Metadata; categories: Category[] };
-const library = require('../../assets/json/grand_with_chapters.json') as Book[];
-const initialSearch = require('../../assets/json/grand_search.json') as SearchStore;
+const data = require('../../../assets/json/spiritual_entities.json') as { metadata: Metadata; categories: Category[] };
+const library = require('../../../assets/json/grand_with_chapters.json') as Book[];
+const initialSearch = require('../../../assets/json/grand_search.json') as SearchStore;
 const palettes: GradientColors[] = [
   ['#B78A3D', '#E5C77F'],
   ['#3D7E8D', '#76B5BE'],
@@ -79,23 +82,12 @@ async function searchGrandbook(name: string, onProgress: (progress: number) => v
   return found;
 }
 
-async function persistSearchStore(results: Record<string, SearchResult[]>) {
-  await fetch('/api/grand-search', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ results }),
-  });
-}
-
 async function persistSpiritualEntities(categories: Category[]) {
-  await fetch('/api/spiritual-entities', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ metadata: data.metadata, categories }),
-  });
+  await saveSpiritualEntities(categories, data.metadata);
 }
 
 export default function WordScreen() {
+  const { user } = useAuth();
   const [categories, setCategories] = useState<Category[]>(data.categories);
   const [searchStore, setSearchStore] = useState<SearchStore>(initialSearch);
   const [category, setCategory] = useState<Category | null>(null);
@@ -104,8 +96,35 @@ export default function WordScreen() {
   const [categoryEditor, setCategoryEditor] = useState<CategoryEditorState | null>(null);
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [cloudMessage, setCloudMessage] = useState<string | null>(null);
+  const [cloudError, setCloudError] = useState(false);
+  const [syncingCloud, setSyncingCloud] = useState(false);
   const categoryIndex = category ? categories.findIndex((item) => item.category === category.category) : 0;
   const sheetColors = palettes[Math.max(categoryIndex, 0) % palettes.length];
+
+  async function syncGrandSearchToFirebase() {
+    if (!user) {
+      setCloudError(true);
+      setCloudMessage('Sign in first to save Discover data to Firebase.');
+      return;
+    }
+    setSyncingCloud(true);
+    setCloudError(false);
+    setCloudMessage('Saving Discover data to Firebase…');
+    try {
+      const seed = await ensureGrandSearchSeeded();
+      setCloudMessage(seed.seeded ? `Firestore saved all ${seed.termCount} Discover terms.` : 'Firestore Discover data is already saved.');
+    } catch (error) {
+      // Do not use console.warn here: Expo Go displays warnings as a blocking overlay.
+      console.log('Discover Firestore save failed:', error);
+      setCloudError(true);
+      const code = (error as { code?: string }).code ?? 'unknown-error';
+      const detail = error instanceof Error ? error.message : String(error);
+      setCloudMessage(`Firestore save failed (${code}): ${detail}`);
+    } finally {
+      setSyncingCloud(false);
+    }
+  }
 
   function syncCategory(nextCategory: Category) {
     setCategory(nextCategory);
@@ -113,6 +132,11 @@ export default function WordScreen() {
   }
 
   async function saveCategory(nextCategory: Category) {
+    if (!user) {
+      setCloudError(true);
+      setCloudMessage('Sign in first to save Discover data to Firestore.');
+      return;
+    }
     const categoriesToSave = categoryEditor?.category
       ? categories.map((item) => (item.category === categoryEditor.category?.category ? nextCategory : item))
       : [...categories, nextCategory];
@@ -133,6 +157,11 @@ export default function WordScreen() {
 
   async function saveEditor(originalName: string | null, nextEntity: Entity) {
     if (!category) return;
+    if (!user) {
+      setCloudError(true);
+      setCloudMessage('Sign in first to save Discover data to Firestore.');
+      return;
+    }
     setProcessing(true);
     setProgress(0);
 
@@ -147,7 +176,9 @@ export default function WordScreen() {
       const nextResults = { ...searchStore.results, [nextEntity.name]: results };
       if (originalName && originalName !== nextEntity.name) delete nextResults[originalName];
 
-      await persistSearchStore(nextResults);
+      // Expo native builds do not have the local /api file-writing endpoint.
+      // Persist generated Discover results directly to Firestore instead.
+      await saveGrandSearchEntry(nextEntity.name, results);
       await persistSpiritualEntities(categories.map((item) => (item.category === category.category ? nextCategory : item)));
       setSearchStore({ generated_from: 'grand_with_chapters.json', generated_at: new Date().toISOString(), results: nextResults });
       syncCategory(nextCategory);
@@ -176,9 +207,7 @@ export default function WordScreen() {
               <Text style={s.kicker}>GRANDBOOK</Text>
               <View style={s.mainTop}>
                 <Text style={s.title}>Category</Text>
-                <Pressable onPress={() => setCategoryEditor({})} style={({ hovered, pressed }) => [s.mainAddButton, (hovered || pressed) && s.mainAddButtonActive]}>
-                  <Text style={s.mainAddText}>+</Text>
-                </Pressable>
+                <View style={s.headerActions}><Pressable onPress={() => void syncGrandSearchToFirebase()} disabled={syncingCloud} style={s.syncButton}><Text style={s.syncText}>{syncingCloud ? '…' : 'Sync'}</Text></Pressable><Pressable onPress={() => setCategoryEditor({})} style={({ hovered, pressed }) => [s.mainAddButton, (hovered || pressed) && s.mainAddButtonActive]}><Text style={s.mainAddText}>+</Text></Pressable></View>
               </View>
             </View>
           }
@@ -191,6 +220,7 @@ export default function WordScreen() {
           )}
         />
       </SafeAreaView>
+      {cloudMessage && <View pointerEvents="none" style={[s.firebaseToast, cloudError && s.firebaseToastError]}><Text style={s.firebaseToastText}>{cloudMessage}</Text></View>}
 
       <Modal transparent animationType="slide" visible={!!category && !entity && !editor && !categoryEditor} onRequestClose={() => setCategory(null)}>
         <View style={s.modal}>
@@ -441,6 +471,9 @@ const s = StyleSheet.create({
   list: { padding: 20, paddingBottom: 35 },
   kicker: { color: c.gold, fontSize: 10, fontWeight: '800', letterSpacing: 1.4, marginTop: 8 },
   mainTop: { marginTop: 8, marginBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 14 },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 9 },
+  syncButton: { minWidth: 54, height: 34, paddingHorizontal: 11, borderRadius: 17, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#E8C77F' },
+  syncText: { color: '#E8C77F', fontSize: 12, fontWeight: '800' },
   title: { color: c.paper, fontFamily: 'Georgia', fontSize: 39 },
   mainAddButton: {
     width: 46,
@@ -454,6 +487,9 @@ const s = StyleSheet.create({
   },
   mainAddButtonActive: { transform: [{ scale: 1.06 }], backgroundColor: '#D7A94B' },
   mainAddText: { color: '#fff', fontSize: 30, lineHeight: 32, fontWeight: '600' },
+  firebaseToast: { position: 'absolute', left: 20, right: 20, bottom: 22, paddingHorizontal: 16, paddingVertical: 13, borderRadius: 12, backgroundColor: '#245D35', zIndex: 20, elevation: 9 },
+  firebaseToastError: { backgroundColor: '#A32D2D' },
+  firebaseToastText: { color: '#fff', fontSize: 13, fontWeight: '700', textAlign: 'center' },
   tile: { flex: 1, height: 150, margin: 5, borderRadius: 17, overflow: 'hidden' },
   tileFill: { flex: 1, padding: 17, justifyContent: 'flex-end' },
   tileTitle: { color: '#fff', fontFamily: 'Georgia', fontSize: 20, lineHeight: 24 },
