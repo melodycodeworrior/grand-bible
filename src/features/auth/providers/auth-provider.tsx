@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore/lite';
-import { auth, db } from '../../firebaseConfig';
-import { ensureGrandSearchSeeded } from '@/services/grand-search';
+import { auth, db } from '@/config/firebase';
+import { ensureGrandSearchSeeded } from '@/data/firestore/grand-search-repository';
 type AuthValue = { user: User | null; loading: boolean; logout: () => Promise<void> };
 const AuthContext = createContext<AuthValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {

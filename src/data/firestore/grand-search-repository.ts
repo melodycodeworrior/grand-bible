@@ -1,6 +1,6 @@
 import { doc, getDoc, serverTimestamp, setDoc, writeBatch } from 'firebase/firestore/lite';
-import { auth, db, GrandSearch, GrandSearchResult } from '../../firebaseConfig';
-const searchData = require('../../assets/json/grand_search.json') as { generated_from: string; generated_at?: string; results: Record<string, GrandSearchResult[]> };
+import { auth, db, GrandSearch, GrandSearchResult } from '@/config/firebase';
+const searchData = require('../../../assets/json/grand_search.json') as { generated_from: string; generated_at?: string; results: Record<string, GrandSearchResult[]> };
 const documentId = (term: string) => encodeURIComponent(term);
 
 function requireSignedInUser() {
