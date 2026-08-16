@@ -1,0 +1,61 @@
+{
+  "apiRoutes": [],
+  "htmlRoutes": [
+    {
+      "file": "./(tabs)/index.tsx",
+      "page": "/(tabs)/index",
+      "namedRegex": "^(?:/\\(tabs\\))?(?:/)?$",
+      "routeKeys": {}
+    },
+    {
+      "file": "./(tabs)/word.tsx",
+      "page": "/(tabs)/word",
+      "namedRegex": "^(?:/\\(tabs\\))?/word(?:/)?$",
+      "routeKeys": {}
+    },
+    {
+      "file": "./(tabs)/read.tsx",
+      "page": "/(tabs)/read",
+      "namedRegex": "^(?:/\\(tabs\\))?/read(?:/)?$",
+      "routeKeys": {}
+    },
+    {
+      "file": "./login.tsx",
+      "page": "/login",
+      "namedRegex": "^/login(?:/)?$",
+      "routeKeys": {}
+    },
+    {
+      "file": "./(tabs)/liturgy.tsx",
+      "page": "/(tabs)/liturgy",
+      "namedRegex": "^(?:/\\(tabs\\))?/liturgy(?:/)?$",
+      "routeKeys": {}
+    },
+    {
+      "file": "./(tabs)/explore.tsx",
+      "page": "/(tabs)/explore",
+      "namedRegex": "^(?:/\\(tabs\\))?/explore(?:/)?$",
+      "routeKeys": {}
+    },
+    {
+      "file": "expo-router/build/views/Sitemap.js",
+      "page": "/_sitemap",
+      "namedRegex": "^/_sitemap(?:/)?$",
+      "routeKeys": {},
+      "generated": true
+    }
+  ],
+  "notFoundRoutes": [
+    {
+      "file": "expo-router/build/views/Unmatched.js",
+      "page": "/+not-found",
+      "namedRegex": "^(?:/(?<notfound>.+?))?(?:/)?$",
+      "routeKeys": {
+        "notfound": "not-found"
+      },
+      "generated": true
+    }
+  ],
+  "redirects": [],
+  "rewrites": []
+}

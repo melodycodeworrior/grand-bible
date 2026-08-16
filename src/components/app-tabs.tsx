@@ -28,19 +28,19 @@ export default function AppTabs() {
         />
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="explore">
-        <NativeTabs.Trigger.Label>Progress</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          sf={{ default: 'chart.bar', selected: 'chart.bar.fill' }}
-          md={{ default: 'bar_chart', selected: 'bar_chart' }}
-        />
-      </NativeTabs.Trigger>
-
       <NativeTabs.Trigger name="word">
         <NativeTabs.Trigger.Label>Discover</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'sparkle.magnifyingglass', selected: 'sparkle.magnifyingglass' }}
           md={{ default: 'travel_explore', selected: 'travel_explore' }}
+        />
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="liturgy">
+        <NativeTabs.Trigger.Label>Liturgy</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'book.closed', selected: 'book.closed.fill' }}
+          md={{ default: 'auto_stories', selected: 'auto_stories' }}
         />
       </NativeTabs.Trigger>
     </NativeTabs>
