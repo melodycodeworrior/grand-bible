@@ -1,24 +1,27 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Alert,
-  FlatList,
-  Modal,
-  StyleSheet as NativeStyleSheet,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
+    Alert,
+    AppState,
+    FlatList,
+    Modal,
+    StyleSheet as NativeStyleSheet,
+    Pressable,
+    ScrollView,
+    Text,
+    TextInput,
+    View,
+    type NativeScrollEvent,
+    type NativeSyntheticEvent,
 } from "react-native";
 import {
-  SafeAreaView,
-  useSafeAreaInsets,
+    SafeAreaView,
+    useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-import type { Chapter, Sentence } from "@/core/models";
+import type { Chapter, RecentBook, Sentence } from "@/core/models";
 import { books } from "@/data/library/books";
 import { useAuth } from "@/features/auth/providers/auth-provider";
 import { useReadingProgress } from "@/features/library/providers/reading-progress-provider";
@@ -27,9 +30,18 @@ const StyleSheet = Object.assign(NativeStyleSheet, {
   absoluteFillObject: NativeStyleSheet.absoluteFill,
 }) as typeof NativeStyleSheet & { absoluteFillObject: object };
 
+function chapterFromRecent(recent: RecentBook) {
+  const nextBook = books[recent.bookIndex];
+  return (
+    nextBook?.source_guess?.chapters?.find(
+      (item) => item.chapter_no === recent.chapterNo,
+    ) ?? null
+  );
+}
+
 export default function HomeScreen() {
   const { user, loading, logout } = useAuth();
-  const { totals } = useReadingProgress();
+  const { recentBook, recentBookLoading, totals } = useReadingProgress();
   const insets = useSafeAreaInsets();
   const [chaptersOpen, setChaptersOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -37,9 +49,11 @@ export default function HomeScreen() {
   const [search, setSearch] = useState("");
   const [bookIndex, setBookIndex] = useState(0);
   const [chapter, setChapter] = useState<Chapter | null>(null);
+  const [focusSentenceNo, setFocusSentenceNo] = useState<number | undefined>();
   const book = books[bookIndex];
   const chapters = useMemo(() => book?.source_guess?.chapters ?? [], [book]);
   const title = book?.title_guess ?? "Untitled book";
+  const recentChapter = recentBook ? chapterFromRecent(recentBook) : null;
   const filteredBooks = useMemo(
     () =>
       books
@@ -96,22 +110,57 @@ export default function HomeScreen() {
         </Pressable>
         <View style={s.section}>
           <Text style={s.sectionTitle}>Continue reading</Text>
-          <Text style={s.library}>Library</Text>
+          <Pressable onPress={() => setChaptersOpen(true)}>
+            <Text style={s.library}>Library</Text>
+          </Pressable>
         </View>
-        <Pressable onPress={() => setChaptersOpen(true)} style={s.continue}>
-          <View style={s.badge}>
-            <Text style={s.badgeText}>01</Text>
+        {recentBook && recentChapter ? (
+          <Pressable
+            onPress={() => {
+              setBookIndex(recentBook.bookIndex);
+              setFocusSentenceNo(recentBook.sentenceNo);
+              setChapter(recentChapter);
+            }}
+            style={s.continue}
+          >
+            <View style={s.badge}>
+              <Text style={s.badgeText}>
+                {String(recentBook.chapterNo).padStart(2, "0")}
+              </Text>
+            </View>
+            <View style={s.continueCopy}>
+              <Text numberOfLines={1} style={s.continueTitle}>
+                {recentBook.bookTitle}
+              </Text>
+              <Text numberOfLines={1} style={s.continueSub}>
+                Ch. {recentBook.chapterNo} · {recentBook.chapterTitle}
+              </Text>
+              <Text numberOfLines={2} style={s.continueSentence}>
+                {recentBook.sentenceText}
+              </Text>
+            </View>
+            <Text style={s.open}>Open</Text>
+          </Pressable>
+        ) : recentBookLoading ? (
+          <View style={s.continue}>
+            <Text style={s.continueSub}>Loading your last chapter…</Text>
           </View>
-          <View style={s.continueCopy}>
-            <Text numberOfLines={1} style={s.continueTitle}>
-              {title}
-            </Text>
-            <Text style={s.continueSub}>
-              {chapters.length} chapters waiting for you
-            </Text>
-          </View>
-          <Text style={s.open}>Open</Text>
-        </Pressable>
+        ) : (
+          <Pressable onPress={() => setChaptersOpen(true)} style={s.continue}>
+            <View style={s.badge}>
+              <Text style={s.badgeText}>01</Text>
+            </View>
+            <View style={s.continueCopy}>
+              <Text numberOfLines={1} style={s.continueTitle}>
+                {title}
+              </Text>
+              <Text style={s.continueSub}>
+                {chapters.length} chapters waiting for you
+              </Text>
+            </View>
+            <Text style={s.open}>Open</Text>
+          </Pressable>
+        )}
       </SafeAreaView>
       <Pressable
         onPress={() =>
@@ -167,6 +216,7 @@ export default function HomeScreen() {
               renderItem={({ item }) => (
                 <Pressable
                   onPress={() => {
+                    setFocusSentenceNo(undefined);
                     setChapter(item);
                     setChaptersOpen(false);
                   }}
@@ -234,6 +284,7 @@ export default function HomeScreen() {
             chapter={chapter}
             bookIndex={bookIndex}
             bookTitle={title}
+            focusSentenceNo={focusSentenceNo}
             onBack={() => setChapter(null)}
           />
         ) : null}
@@ -255,17 +306,73 @@ function ChapterReader({
   chapter,
   bookIndex,
   bookTitle,
+  focusSentenceNo,
   onBack,
 }: {
   chapter: Chapter;
   bookIndex: number;
   bookTitle: string;
+  focusSentenceNo?: number;
   onBack: () => void;
 }) {
   const { user } = useAuth();
-  const { getHighlight, highlight, isRead, toggleRead } = useReadingProgress();
+  const { getHighlight, highlight, isRead, saveRecentBook, toggleRead } =
+    useReadingProgress();
   const [selected, setSelected] = useState<Sentence | null>(null);
   const [saving, setSaving] = useState(false);
+  const scrollRef = useRef<ScrollView>(null);
+  const sentenceOffsets = useRef<Record<number, number>>({});
+  const visibleSentenceNo = useRef(
+    focusSentenceNo ?? chapter.sentences[0]?.sentence_no ?? 1,
+  );
+  const didScrollToFocus = useRef(false);
+  const saveRecentRef = useRef(async () => {});
+
+  const updateVisibleSentence = (offsetY: number) => {
+    const entries = Object.entries(sentenceOffsets.current)
+      .map(([key, y]) => [Number(key), y] as const)
+      .sort((a, b) => a[1] - b[1]);
+    let current = entries[0]?.[0] ?? chapter.sentences[0]?.sentence_no ?? 1;
+    for (const [sentenceNo, y] of entries) {
+      if (y <= offsetY + 24) current = sentenceNo;
+      else break;
+    }
+    visibleSentenceNo.current = current;
+  };
+
+  saveRecentRef.current = async () => {
+    if (!user) return;
+    try {
+      await saveRecentBook(
+        bookIndex,
+        chapter.chapter_no,
+        visibleSentenceNo.current,
+      );
+    } catch (error) {
+      console.log("Could not save recent book:", error);
+    }
+  };
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (next) => {
+      if (next === "background" || next === "inactive") {
+        void saveRecentRef.current();
+      }
+    });
+    return () => {
+      subscription.remove();
+      void saveRecentRef.current();
+    };
+  }, []);
+
+  const closeReader = () => {
+    void saveRecentRef.current();
+    onBack();
+  };
+
+  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    updateVisibleSentence(event.nativeEvent.contentOffset.y);
+  };
 
   const save = async (color: string) => {
     if (!selected) return;
@@ -304,7 +411,7 @@ function ChapterReader({
             accessibilityRole="button"
             accessibilityLabel="Close chapter"
             hitSlop={12}
-            onPress={onBack}
+            onPress={closeReader}
             style={({ hovered, pressed }) => [
               s.backButton,
               (hovered || pressed) && s.backButtonPressed,
@@ -316,7 +423,12 @@ function ChapterReader({
             {bookTitle}
           </Text>
         </View>
-        <ScrollView contentContainerStyle={s.readerContent}>
+        <ScrollView
+          ref={scrollRef}
+          contentContainerStyle={s.readerContent}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+        >
           <Text style={s.kicker}>CHAPTER {chapter.chapter_no}</Text>
           <Text style={s.readerTitle}>{chapter.chapter_title}</Text>
           {chapter.sentences.map((sentence) => {
@@ -325,11 +437,28 @@ function ChapterReader({
               chapter.chapter_no,
               sentence.sentence_no,
             );
+            const isResume = sentence.sentence_no === focusSentenceNo;
             return (
               <Pressable
                 key={sentence.sentence_no}
                 onLongPress={() => setSelected(sentence)}
                 delayLongPress={350}
+                onLayout={(event) => {
+                  const y = event.nativeEvent.layout.y;
+                  sentenceOffsets.current[sentence.sentence_no] = y;
+                  if (
+                    focusSentenceNo != null &&
+                    sentence.sentence_no === focusSentenceNo &&
+                    !didScrollToFocus.current
+                  ) {
+                    didScrollToFocus.current = true;
+                    visibleSentenceNo.current = focusSentenceNo;
+                    scrollRef.current?.scrollTo({
+                      y: Math.max(0, y - 12),
+                      animated: true,
+                    });
+                  }
+                }}
               >
                 {color ? (
                   <LinearGradient
@@ -339,7 +468,9 @@ function ChapterReader({
                     <Text style={s.sentence}>{sentence.sentense_detail}</Text>
                   </LinearGradient>
                 ) : (
-                  <Text style={s.sentence}>{sentence.sentense_detail}</Text>
+                  <Text style={[s.sentence, isResume && s.resumeSentence]}>
+                    {sentence.sentense_detail}
+                  </Text>
                 )}
               </Pressable>
             );
@@ -482,6 +613,13 @@ const s = StyleSheet.create({
   continueCopy: { flex: 1, marginLeft: 11 },
   continueTitle: { color: "#FBF9F4", fontSize: 13, fontWeight: "600" },
   continueSub: { marginTop: 3, color: "#AAA39A", fontSize: 11 },
+  continueSentence: {
+    marginTop: 5,
+    color: "#C9C2B8",
+    fontFamily: "Georgia",
+    fontSize: 12,
+    lineHeight: 17,
+  },
   open: { color: "#E8C77F", fontSize: 11, fontWeight: "700" },
   discover: {
     position: "absolute",
@@ -606,6 +744,13 @@ const s = StyleSheet.create({
     fontFamily: "Georgia",
     fontSize: 17,
     lineHeight: 28,
+  },
+  resumeSentence: {
+    marginHorizontal: -8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 10,
+    backgroundColor: "#F4E8CC",
   },
   highlight: { borderRadius: 10, paddingHorizontal: 8, marginBottom: 12 },
   readerFooter: {

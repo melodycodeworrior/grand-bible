@@ -1,48 +1,37 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
-import { useColorScheme } from 'react-native';
+import { Tabs } from "expo-router";
+import { Text } from "react-native";
 
-import { GrandbookTheme } from '@/constants/grandbook-theme';
+import { GrandbookTheme } from "@/constants/grandbook-theme";
 
+const colors = GrandbookTheme.colors;
+const tabIcons = {
+  index: "⌂",
+  read: "◷",
+  word: "⌕",
+  liturgy: "✦",
+} as const;
 export default function AppTabs() {
-  useColorScheme();
-  const colors = GrandbookTheme.colors;
-
   return (
-    <NativeTabs
-      backgroundColor={colors.paper}
-      indicatorColor={colors.cream}
-      labelStyle={{ selected: { color: colors.gold }, default: { color: colors.ink } }}>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          sf={{ default: 'house', selected: 'house.fill' }}
-          md={{ default: 'home', selected: 'home_filled' }}
-        />
-      </NativeTabs.Trigger>
-
-      <NativeTabs.Trigger name="read">
-        <NativeTabs.Trigger.Label>Read</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          sf={{ default: 'chart.bar', selected: 'chart.bar.fill' }}
-          md={{ default: 'bar_chart', selected: 'bar_chart' }}
-        />
-      </NativeTabs.Trigger>
-
-      <NativeTabs.Trigger name="word">
-        <NativeTabs.Trigger.Label>Discover</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          sf={{ default: 'sparkle.magnifyingglass', selected: 'sparkle.magnifyingglass' }}
-          md={{ default: 'travel_explore', selected: 'travel_explore' }}
-        />
-      </NativeTabs.Trigger>
-
-      <NativeTabs.Trigger name="liturgy">
-        <NativeTabs.Trigger.Label>Liturgy</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          sf={{ default: 'book.closed', selected: 'book.closed.fill' }}
-          md={{ default: 'auto_stories', selected: 'auto_stories' }}
-        />
-      </NativeTabs.Trigger>
-    </NativeTabs>
+    <Tabs
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: colors.gold,
+        tabBarInactiveTintColor: colors.ink,
+        tabBarStyle: {
+          backgroundColor: colors.paper,
+          borderTopColor: colors.cream,
+        },
+        tabBarIcon: ({ color }) => (
+          <Text style={{ color, fontSize: 22, fontWeight: "700" }}>
+            {tabIcons[route.name as keyof typeof tabIcons] ?? "•"}
+          </Text>
+        ),
+      })}
+    >
+      <Tabs.Screen name="index" options={{ title: "Home" }} />
+      <Tabs.Screen name="read" options={{ title: "Read" }} />
+      <Tabs.Screen name="word" options={{ title: "Discover" }} />
+      <Tabs.Screen name="liturgy" options={{ title: "Liturgy" }} />
+    </Tabs>
   );
 }
