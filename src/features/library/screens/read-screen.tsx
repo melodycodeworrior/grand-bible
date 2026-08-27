@@ -2,7 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Highlight, useReadingProgress } from '@/features/library/providers/reading-progress-provider';
+import type { Highlight } from '@/core/models';
+import { useReadingProgress } from '@/features/library/providers/reading-progress-provider';
 
 export default function ReadScreen() {
   const { highlights, highlightsLoading, removeHighlight, totals } = useReadingProgress();

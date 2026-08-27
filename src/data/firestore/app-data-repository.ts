@@ -1,5 +1,6 @@
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore/lite';
 import { auth, db } from '@/config/firebase';
+import type { Category, SpiritualEntitiesMetadata } from '@/core/models';
 
 function requireSignedInUser() {
   const user = auth.currentUser;
@@ -8,7 +9,7 @@ function requireSignedInUser() {
 }
 
 /** Stores editable Discover metadata outside the grandSearch term collection. */
-export async function saveSpiritualEntities(categories: unknown[], metadata: unknown) {
+export async function saveSpiritualEntities(categories: Category[], metadata: SpiritualEntitiesMetadata) {
   await requireSignedInUser().getIdToken();
   await setDoc(doc(db, 'appData', 'spiritualEntities'), {
     categories,

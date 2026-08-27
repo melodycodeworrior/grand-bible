@@ -18,14 +18,10 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
+import type { Chapter, Sentence } from "@/core/models";
+import { books } from "@/data/library/books";
 import { useAuth } from "@/features/auth/providers/auth-provider";
-import {
-  books,
-  Chapter,
-  useReadingProgress,
-} from "@/features/library/providers/reading-progress-provider";
-
-type Sentence = { sentence_no: number; sentense_detail: string };
+import { useReadingProgress } from "@/features/library/providers/reading-progress-provider";
 const colors = ["#F9D75C", "#9BE7B2", "#9EC8FF", "#F5A6CB"] as const;
 const StyleSheet = Object.assign(NativeStyleSheet, {
   absoluteFillObject: NativeStyleSheet.absoluteFill,
@@ -304,7 +300,16 @@ function ChapterReader({
       <StatusBar style="dark" />
       <SafeAreaView style={s.readerSafe}>
         <View style={s.readerTop}>
-          <Pressable onPress={onBack}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Close chapter"
+            hitSlop={12}
+            onPress={onBack}
+            style={({ hovered, pressed }) => [
+              s.backButton,
+              (hovered || pressed) && s.backButtonPressed,
+            ]}
+          >
             <Text style={s.back}>Back</Text>
           </Pressable>
           <Text numberOfLines={1} style={s.readerBook}>
@@ -573,7 +578,14 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  back: { color: "#9A701D", fontWeight: "700" },
+  backButton: {
+    paddingHorizontal: 13,
+    paddingVertical: 8,
+    borderRadius: 15,
+    backgroundColor: "#C79832",
+  },
+  backButtonPressed: { opacity: 0.8 },
+  back: { color: "#fff", fontSize: 11, fontWeight: "800" },
   readerBook: {
     maxWidth: "70%",
     color: "#292827",

@@ -4,31 +4,16 @@ import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'r
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GrandbookTheme } from '@/constants/grandbook-theme';
+import type { Category, Entity, SearchResult } from '@/core/models';
+import { spiritualEntities } from '@/data/discovery/entities';
+import { initialSearch, type SearchStore } from '@/data/discovery/search';
 import { saveSpiritualEntities } from '@/data/firestore/app-data-repository';
 import { ensureGrandSearchSeeded, saveGrandSearchEntry } from '@/data/firestore/grand-search-repository';
+import { library } from '@/data/library/books';
 import { useAuth } from '@/features/auth/providers/auth-provider';
+import type { CategoryEditorState, EditorState } from '@/features/discovery/types';
 
 type GradientColors = readonly [string, string, ...string[]];
-type Entity = { name: string; type: string; tradition: string; description: string };
-type Category = { category: string; description: string; entities: Entity[] };
-type Sentence = { sentence_no: number; sentense_detail: string };
-type Chapter = { chapter_no: number; chapter_title: string; sentences: Sentence[] };
-type Book = { title_guess: string | null; source_guess?: { chapters?: Chapter[] } };
-type Metadata = { title?: string; compiler_reference?: string; description?: string };
-type SearchResult = {
-  book: string;
-  chapter_no: number;
-  chapter_title: string;
-  sentence_no: number;
-  sentense_detail: string;
-};
-type EditorState = { mode: 'edit' | 'add'; category: Category; entity?: Entity };
-type CategoryEditorState = { category?: Category };
-type SearchStore = { generated_from: string; generated_at?: string; results: Record<string, SearchResult[]> };
-
-const data = require('../../../../assets/json/spiritual_entities.json') as { metadata: Metadata; categories: Category[] };
-const library = require('../../../../assets/json/grand_with_chapters.json') as Book[];
-const initialSearch = require('../../../../assets/json/grand_search.json') as SearchStore;
 const palettes: GradientColors[] = [
   ['#B78A3D', '#E5C77F'],
   ['#3D7E8D', '#76B5BE'],
@@ -83,12 +68,12 @@ async function searchGrandbook(name: string, onProgress: (progress: number) => v
 }
 
 async function persistSpiritualEntities(categories: Category[]) {
-  await saveSpiritualEntities(categories, data.metadata);
+  await saveSpiritualEntities(categories, spiritualEntities.metadata);
 }
 
 export default function WordScreen() {
   const { user } = useAuth();
-  const [categories, setCategories] = useState<Category[]>(data.categories);
+  const [categories, setCategories] = useState<Category[]>(spiritualEntities.categories);
   const [searchStore, setSearchStore] = useState<SearchStore>(initialSearch);
   const [category, setCategory] = useState<Category | null>(null);
   const [entity, setEntity] = useState<Entity | null>(null);

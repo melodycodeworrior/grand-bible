@@ -2,25 +2,9 @@ import { createContext, ReactNode, useContext, useEffect, useMemo, useState } fr
 import { collection, deleteDoc, doc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore/lite';
 
 import { db } from '@/config/firebase';
+import type { Highlight } from '@/core/models';
+import { books } from '@/data/library/books';
 import { useAuth } from '@/features/auth/providers/auth-provider';
-
-type Sentence = { sentence_no: number; sentense_detail: string };
-export type Chapter = { chapter_no: number; chapter_title: string; sentences: Sentence[] };
-type Book = { title_guess: string | null; source_guess?: { chapters?: Chapter[] } };
-
-const library = require('../../../../assets/json/grand_with_chapters.json') as Book[];
-export const books = library.filter((book) => book.title_guess && book.source_guess?.chapters?.length);
-
-export type Highlight = {
-  id: string;
-  bookIndex: number;
-  bookTitle: string;
-  chapterNo: number;
-  chapterTitle: string;
-  sentenceNo: number;
-  sentenceText: string;
-  color: string;
-};
 
 type ProgressContextValue = {
   highlights: Highlight[];

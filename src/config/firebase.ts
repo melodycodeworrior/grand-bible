@@ -5,6 +5,8 @@ import { getAuth, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore/lite";
 import { Platform } from "react-native";
 
+import type { SearchResult } from "@/core/models";
+
 const firebaseConfig = {
   apiKey: "AIzaSyC_1dO1u-12lP1M0zqs1mEvlKWeLIRFklY",
   authDomain: "grandbook-89484.firebaseapp.com",
@@ -57,13 +59,7 @@ export type User = {
 
 /** Backward-compatible name for the user document model. */
 export type UserProfile = User;
-export type GrandSearchResult = {
-  book: string;
-  chapter_no: number;
-  chapter_title: string;
-  sentence_no: number;
-  sentense_detail: string;
-};
+export type GrandSearchResult = SearchResult;
 export type GrandSearch = {
   term: string;
   generatedFrom: string;
