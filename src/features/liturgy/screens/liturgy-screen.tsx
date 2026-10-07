@@ -6,6 +6,8 @@ import { SymbolView } from "expo-symbols";
 import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Animated,
+  Easing,
   Modal,
   Pressable,
   ScrollView,
@@ -158,7 +160,9 @@ export default function LiturgyScreen() {
     [date, setDate] = useState(""),
     [active, setActive] = useState<Record<string, Section>>({}),
     [calendar, setCalendar] = useState(false),
-    [month, setMonth] = useState(new Date());
+    [month, setMonth] = useState(new Date()),
+    [feastWidth, setFeastWidth] = useState(0);
+  const marqueeX = useState(() => new Animated.Value(0))[0];
   useEffect(() => {
     void (async () => {
       const [a] = await Asset.loadAsync(diary);
@@ -172,8 +176,26 @@ export default function LiturgyScreen() {
   }, []);
   const dates = useMemo(() => new Set(entries.map((x) => x.date)), [entries]);
   const readings = entries.filter((x) => x.date === date);
+  const feast = [...new Set(readings.map((x) => x.feast).filter(Boolean))].join(
+    " · ",
+  );
   const season = readings[0]?.liturgicalColor ?? "";
   const seasonText = season.includes("ಧವೊ") ? theme.colors.night : "#FFFFFF";
+  useEffect(() => {
+    if (!feastWidth) return;
+    const distance = feastWidth + 32;
+    marqueeX.setValue(0);
+    const animation = Animated.loop(
+      Animated.timing(marqueeX, {
+        toValue: -distance,
+        duration: Math.max(distance * 25, 4000),
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [feast, feastWidth, marqueeX]);
   if (!date)
     return (
       <View style={s.center}>
@@ -190,14 +212,22 @@ export default function LiturgyScreen() {
   );
   return (
     <View style={s.screen}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={s.content}>
+      <SafeAreaView style={s.safeArea}>
+        <View style={s.fixedHeader}>
           <Text style={s.title}>Liturgy</Text>
-          <Text style={s.feast}>
-            {[...new Set(readings.map((x) => x.feast).filter(Boolean))].join(
-              " · ",
-            )}
-          </Text>
+          <View style={s.feastMarquee}>
+            <Animated.View
+              style={[s.feastTrack, { transform: [{ translateX: marqueeX }] }]}
+            >
+              <Text
+                style={s.feast}
+                onLayout={(e) => setFeastWidth(e.nativeEvent.layout.width)}
+              >
+                {feast}
+              </Text>
+              <Text style={s.feast}>{feast}</Text>
+            </Animated.View>
+          </View>
           <View style={s.header}>
             <LinearGradient
               colors={[theme.colors.night, theme.colors.nav]}
@@ -239,6 +269,8 @@ export default function LiturgyScreen() {
               </LinearGradient>
             </Pressable>
           </View>
+        </View>
+        <ScrollView style={s.readings} contentContainerStyle={s.content}>
           {readings.map((entry) => {
             const sections = split(entry.content),
               available = order.filter((x) => sections[x]?.trim()),
@@ -296,8 +328,8 @@ export default function LiturgyScreen() {
         </ScrollView>
         <Pressable
           onPress={() => {
-            setMonth(new Date());
-            setCalendar(true);
+            setDate(keyOf(new Date()));
+            setCalendar(false);
           }}
           style={s.today}
         >
@@ -306,6 +338,7 @@ export default function LiturgyScreen() {
         <Modal
           transparent
           animationType="slide"
+          hardwareAccelerated
           visible={calendar}
           onRequestClose={() => setCalendar(false)}
         >
@@ -359,15 +392,15 @@ export default function LiturgyScreen() {
                         setDate(k);
                         setCalendar(false);
                       }}
-                      style={[
-                        s.cell,
-                        k === date && s.selected,
-                        !hasReading && d && s.disabled,
-                      ]}
+                      style={[s.cell, !hasReading && d && s.disabled]}
                     >
-                      <Text style={[s.cellText, k === date && s.selectedText]}>
-                        {d?.getDate() ?? ""}
-                      </Text>
+                      <View style={[s.dateFace, k === date && s.selected]}>
+                        <Text
+                          style={[s.cellText, k === date && s.selectedText]}
+                        >
+                          {d?.getDate() ?? ""}
+                        </Text>
+                      </View>
                       {hasReading && k !== date ? (
                         <View style={s.readingDot} />
                       ) : null}
@@ -384,13 +417,19 @@ export default function LiturgyScreen() {
 }
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: "#90796f" },
+  safeArea: { flex: 1 },
   center: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: theme.colors.night,
   },
-  content: { paddingBottom: 90 },
+  fixedHeader: { paddingBottom: 0 },
+  readings: { flex: 1 },
+  content: {
+    flexGrow: 1,
+    paddingBottom: 90,
+  },
   title: {
     marginTop: 14,
     color: theme.colors.paper,
@@ -398,19 +437,21 @@ const s = StyleSheet.create({
     fontSize: 24,
     fontWeight: "700",
     textAlign: "center",
+    letterSpacing: 10,
   },
   feast: {
-    marginTop: 7,
-    paddingHorizontal: 20,
     color: "#1b1212",
     fontSize: 15,
-    textAlign: "center",
+    marginRight: 32,
   },
+  feastMarquee: { height: 22, marginTop: 7, overflow: "hidden" },
+  feastTrack: { flexDirection: "row", alignItems: "center" },
   header: {
     marginTop: 14,
     paddingHorizontal: 16,
     flexDirection: "row",
     alignItems: "center",
+    letterSpacing: 1,
   },
   dateCard: { flex: 1, marginRight: 14, padding: 14, borderRadius: 16 },
   date: {
@@ -441,6 +482,7 @@ const s = StyleSheet.create({
     fontWeight: "800",
   },
   card: {
+    flexGrow: 1,
     marginHorizontal: 16,
     marginTop: 15,
     padding: 16,
@@ -546,7 +588,13 @@ const s = StyleSheet.create({
     aspectRatio: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  dateFace: {
+    width: 36,
+    height: 36,
     borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
   },
   selected: { backgroundColor: theme.colors.night },
   disabled: { opacity: 0.35 },
